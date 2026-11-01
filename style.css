@@ -1,0 +1,1199 @@
+/*
+  style.css
+
+  功能：
+  - 信封首頁
+  - 信封開啟動畫
+  - 邀請函信紙
+  - 一般情境信紙
+  - 隨機事件信紙
+  - 遊戲狀態列
+  - 健康值與快樂值進度條
+  - 結算頁
+  - 手機版 RWD
+*/
+
+/* =====================================
+   全域設定
+===================================== */
+
+:root {
+  --background: #fcedec;
+  --paper: #fff9f2;
+  --normal-paper: #edd7c9;
+  --event-paper: #b0b5c3;
+
+  --navy: #0d1f2d;
+  --blue: #546a7b;
+  --pink: #fae1df;
+  --rose: #ba6d77;
+  --green: #688b75;
+  --gray: #9ea3b0;
+
+  --border: #d8c7bb;
+  --shadow: rgba(76, 50, 50, 0.16);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  overflow-x: hidden;
+
+  background: var(--background);
+
+  color: var(--navy);
+
+  font-family:
+    "LXGW WenKai TC",
+    "Noto Serif TC",
+    "PingFang TC",
+    serif;
+}
+
+/* =====================================
+   p5.js 背景
+===================================== */
+
+#p5-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+
+  overflow: hidden;
+
+  pointer-events: none;
+}
+
+#p5-background canvas {
+  display: block;
+}
+
+/* =====================================
+   遊戲容器
+===================================== */
+
+.app-shell {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  min-height: 100vh;
+}
+
+.screen {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* =====================================
+   信封首頁
+===================================== */
+
+.envelope-page {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  min-height: 100vh;
+  padding: 30px 20px;
+
+  text-align: center;
+}
+
+/* =====================================
+   信封
+===================================== */
+
+.envelope {
+  position: relative;
+
+  width: min(390px, 82vw);
+  aspect-ratio: 1.55;
+
+  cursor: pointer;
+
+  filter:
+    drop-shadow(
+      0 18px 28px rgba(83, 52, 58, 0.16)
+    );
+
+  transition:
+    transform 0.35s ease,
+    filter 0.35s ease;
+}
+
+.envelope:hover {
+  transform: translateY(-8px) rotate(-1deg);
+
+  filter:
+    drop-shadow(
+      0 25px 35px rgba(83, 52, 58, 0.22)
+    );
+}
+
+.envelope:focus-visible {
+  outline: 3px solid rgba(186, 109, 119, 0.5);
+  outline-offset: 10px;
+}
+
+.envelope-inside {
+  position: absolute;
+  inset: 8% 5%;
+
+  overflow: hidden;
+
+  border-radius: 5px;
+
+  background: var(--paper);
+}
+
+.inside-letter {
+  position: absolute;
+
+  top: -18%;
+  left: 12%;
+  right: 12%;
+
+  height: 82%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 1px solid #d8c8c3;
+
+  background: var(--paper);
+
+  color: var(--rose);
+
+  font-size: 2rem;
+
+  transition:
+    top 1s ease,
+    transform 1s ease;
+}
+
+.envelope-body {
+  position: absolute;
+  inset: 8% 5%;
+
+  overflow: hidden;
+
+  border: 2px solid #d5b6b8;
+  border-radius: 5px;
+
+  background: var(--pink);
+}
+
+.envelope-line {
+  position: absolute;
+  bottom: 0;
+
+  width: 72%;
+  height: 2px;
+
+  background: #d5b6b8;
+}
+
+.envelope-line-left {
+  left: -11%;
+
+  transform: rotate(31deg);
+  transform-origin: left center;
+}
+
+.envelope-line-right {
+  right: -11%;
+
+  transform: rotate(-31deg);
+  transform-origin: right center;
+}
+
+.envelope-flap {
+  position: absolute;
+  z-index: 4;
+
+  top: 8%;
+  left: 5%;
+
+  width: 90%;
+  height: 60%;
+
+  border-top: 2px solid #cdaeb2;
+
+  background: #f7dfe0;
+
+  clip-path: polygon(
+    0 0,
+    50% 72%,
+    100% 0,
+    100% 100%,
+    0 100%
+  );
+
+  transform-origin: top center;
+
+  transition:
+    transform 0.9s ease,
+    z-index 0.1s ease 0.45s;
+}
+
+.envelope-stamp {
+  position: absolute;
+  z-index: 6;
+
+  top: 18%;
+  right: 13%;
+
+  width: 52px;
+  height: 52px;
+
+  display: grid;
+  place-items: center;
+
+  border: 2px dashed var(--rose);
+
+  background: var(--paper);
+
+  color: var(--rose);
+
+  font-size: 1.2rem;
+
+  transform: rotate(8deg);
+}
+
+.envelope-heart {
+  position: absolute;
+  z-index: 6;
+
+  left: 50%;
+  top: 49%;
+
+  color: var(--rose);
+
+  font-size: 2rem;
+
+  transform: translate(-50%, -50%);
+}
+
+.envelope-hint {
+  margin: 30px 0 0;
+
+  color: #8c7278;
+
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+
+  animation: hintFloat 2.5s ease-in-out infinite;
+}
+
+/* =====================================
+   信封動畫
+===================================== */
+
+.envelope.opening {
+  pointer-events: none;
+
+  animation: envelopeOpen 1.2s ease both;
+}
+
+.envelope.opening .envelope-flap {
+  z-index: 1;
+
+  transform: rotateX(180deg);
+}
+
+.envelope.opening .inside-letter {
+  top: -70%;
+
+  transform: translateY(-15px);
+}
+
+@keyframes envelopeOpen {
+  0% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+
+  65% {
+    transform: scale(1.06) rotate(-2deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.15) translateY(-15px);
+    opacity: 0;
+  }
+}
+
+@keyframes hintFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* =====================================
+   信封周圍裝飾
+===================================== */
+
+.envelope-decoration {
+  position: absolute;
+
+  color: #d99ea8;
+
+  font-size: 2rem;
+  opacity: 0.7;
+
+  animation: decorationFloat 4s ease-in-out infinite;
+}
+
+.envelope-decoration-left {
+  top: 25%;
+  left: 18%;
+}
+
+.envelope-decoration-right {
+  right: 17%;
+  bottom: 25%;
+
+  animation-delay: 1s;
+}
+
+@keyframes decorationFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+
+  50% {
+    transform: translateY(-12px) rotate(8deg);
+  }
+}
+
+/* =====================================
+   信紙頁面
+===================================== */
+
+.letter-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  min-height: 100vh;
+  padding: 50px 20px;
+
+  animation: letterAppear 0.8s ease both;
+}
+
+.letter-paper {
+  position: relative;
+
+  width: min(680px, 100%);
+  min-height: 670px;
+
+  padding: 72px clamp(25px, 7vw, 75px) 55px;
+
+  border: 1px solid var(--border);
+
+  background:
+    linear-gradient(
+      rgba(255, 249, 242, 0.96),
+      rgba(255, 249, 242, 0.96)
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 29px,
+      rgba(186, 109, 119, 0.07) 30px
+    );
+
+  box-shadow:
+    0 18px 42px var(--shadow);
+
+  transform: rotate(-0.5deg);
+}
+
+.letter-paper.choice-paper {
+  background:
+    linear-gradient(
+      rgba(237, 215, 201, 0.96),
+      rgba(237, 215, 201, 0.96)
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 29px,
+      rgba(13, 31, 45, 0.06) 30px
+    );
+}
+
+.letter-paper.event-paper {
+  background:
+    linear-gradient(
+      rgba(176, 181, 195, 0.96),
+      rgba(176, 181, 195, 0.96)
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 29px,
+      rgba(13, 31, 45, 0.08) 30px
+    );
+}
+/*
+  directEvents 與 directEvents2
+  使用不同於 randomEvents 的突發事件顏色
+*/
+.letter-paper.direct-event-paper {
+  background:
+    linear-gradient(
+      rgba(226, 207, 174, 0.97),
+      rgba(226, 207, 174, 0.97)
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 29px,
+      rgba(126, 91, 46, 0.08) 30px
+    );
+
+  border-color: rgba(126, 91, 46, 0.38);
+}
+
+/*
+  突發事件的內框顏色
+*/
+.direct-event-paper::before {
+  border-color: rgba(126, 91, 46, 0.38);
+}
+
+/*
+  突發事件標籤顏色
+*/
+.direct-event-paper .letter-eyebrow {
+  color: #7e5b2e;
+}
+
+/*
+  突發事件郵票
+*/
+.direct-event-paper .letter-stamp {
+  border-color: #9b7239;
+  color: #7e5b2e;
+}
+
+/*
+  突發事件分隔線
+*/
+.direct-event-paper .letter-divider {
+  color: #9b7239;
+}
+
+/*
+  突發事件按鈕
+*/
+.direct-event-paper .letter-button {
+  border-color: #9b7239;
+  background: #f3e5c8;
+}
+
+.direct-event-paper .letter-button:hover {
+  background: #ead5a9;
+}
+
+/*
+  突發事件數值區
+*/
+.direct-event-paper .reply-stats {
+  border-color: rgba(126, 91, 46, 0.5);
+  background: rgba(255, 249, 242, 0.65);
+}
+
+.letter-paper.final-paper {
+  background:
+    linear-gradient(
+      rgba(255, 249, 242, 0.97),
+      rgba(255, 249, 242, 0.97)
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 29px,
+      rgba(186, 109, 119, 0.07) 30px
+    );
+}
+
+.letter-paper::before {
+  content: "";
+
+  position: absolute;
+  inset: 15px;
+
+  border: 1px dashed rgba(186, 109, 119, 0.35);
+
+  pointer-events: none;
+}
+
+.letter-content {
+  position: relative;
+  z-index: 2;
+
+  text-align: center;
+}
+
+/* =====================================
+   信紙郵票與郵戳
+===================================== */
+
+.letter-stamp {
+  position: absolute;
+  z-index: 3;
+
+  top: 28px;
+  right: 35px;
+
+  padding: 8px 10px;
+
+  border: 2px dashed var(--rose);
+
+  color: var(--rose);
+
+  font-size: 0.65rem;
+  line-height: 1.25;
+  letter-spacing: 0.08em;
+  text-align: center;
+
+  transform: rotate(8deg);
+}
+
+.postmark {
+  position: absolute;
+
+  top: 35px;
+  left: 35px;
+
+  width: 68px;
+  height: 68px;
+
+  display: grid;
+  place-items: center;
+
+  border: 2px solid rgba(84, 106, 123, 0.35);
+  border-radius: 50%;
+
+  color: rgba(84, 106, 123, 0.7);
+
+  font-size: 0.62rem;
+  line-height: 1.3;
+  text-align: center;
+
+  transform: rotate(-12deg);
+}
+
+/* =====================================
+   信紙文字
+===================================== */
+
+.letter-eyebrow {
+  margin: 0 0 18px;
+
+  color: var(--blue);
+
+  font-size: 0.82rem;
+  font-weight: bold;
+  letter-spacing: 0.2em;
+}
+
+.letter-paper h1 {
+  margin: 0;
+
+  color: var(--navy);
+
+  font-size: clamp(2rem, 6vw, 3.3rem);
+  line-height: 1.3;
+}
+
+.letter-paper h2 {
+  margin: 15px 0 25px;
+
+  color: var(--rose);
+
+  font-size: clamp(1rem, 3vw, 1.35rem);
+  font-weight: normal;
+}
+
+.letter-divider {
+  margin: 22px 0 30px;
+
+  color: var(--rose);
+
+  letter-spacing: 0.15em;
+}
+
+.letter-text {
+  max-width: 500px;
+  margin: 0 auto 28px;
+
+  color: #39434a;
+
+  font-size: 1rem;
+  line-height: 2;
+  text-align: left;
+}
+
+.letter-text p {
+  margin: 0 0 15px;
+}
+
+.letter-text ul {
+  margin: 12px 0 18px;
+  padding-left: 25px;
+}
+
+.letter-text li {
+  margin: 7px 0;
+}
+
+.letter-signature {
+  margin: 28px 0;
+
+  color: var(--blue);
+
+  line-height: 1.8;
+  text-align: right;
+}
+
+.letter-signature span {
+  color: var(--rose);
+}
+
+/* =====================================
+   信紙按鈕
+===================================== */
+
+.letter-button {
+  position: relative;
+  z-index: 4;
+
+  min-width: 190px;
+  min-height: 48px;
+
+  padding: 11px 26px;
+
+  border: 1px solid var(--rose);
+  border-radius: 4px;
+
+  background: var(--pink);
+
+  color: var(--navy);
+
+  font-family: inherit;
+  font-size: 1rem;
+
+  cursor: pointer;
+
+  box-shadow:
+    3px 3px 0 rgba(186, 109, 119, 0.2);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.letter-button:hover {
+  background: #f4d0d0;
+
+  transform: translateY(-3px);
+
+  box-shadow:
+    5px 6px 0 rgba(186, 109, 119, 0.2);
+}
+
+.letter-button:active {
+  transform: translateY(1px);
+}
+
+.letter-button:focus-visible {
+  outline: 3px solid rgba(186, 109, 119, 0.45);
+  outline-offset: 4px;
+}
+
+.secondary-letter-button {
+  background: #ffffff;
+}
+
+/* =====================================
+   遊戲狀態列
+===================================== */
+
+.game-status {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+
+  width: 100%;
+  max-width: 520px;
+
+  margin: 0 auto 28px;
+  padding: 15px;
+
+  border: 1px solid rgba(84, 106, 123, 0.28);
+  border-radius: 10px;
+
+  background: rgba(255, 249, 242, 0.95);
+
+  color: var(--navy);
+  text-align: left;
+}
+
+.status-item {
+  min-width: 0;
+
+  color: var(--navy);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.status-item span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: var(--blue);
+  font-size: 0.86rem;
+}
+
+.status-item strong {
+  display: block;
+
+  color: var(--navy);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.status-money {
+  grid-column: 1 / -1;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding-bottom: 10px;
+
+  border-bottom: 1px dashed rgba(84, 106, 123, 0.28);
+}
+
+.status-money span {
+  margin: 0;
+}
+
+.status-money strong {
+  display: block;
+
+  color: var(--rose);
+  font-size: 1.2rem;
+}
+
+/* =====================================
+   進度條
+===================================== */
+
+.status-bar {
+  width: 100%;
+  height: 9px;
+
+  margin-top: 7px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background: rgba(84, 106, 123, 0.15);
+}
+
+.status-fill {
+  height: 100%;
+
+  border-radius: inherit;
+
+  transition: width 0.5s ease;
+}
+
+.health-fill {
+  background: var(--green);
+}
+
+.happiness-fill {
+  background: var(--rose);
+}
+
+/* =====================================
+   選項
+===================================== */
+
+.letter-options {
+  display: grid;
+  gap: 13px;
+
+  margin-top: 24px;
+}
+
+.choice-button {
+  width: 100%;
+
+  padding: 15px 18px;
+
+  border: 1px solid #d6b3b2;
+  border-radius: 7px;
+
+  background: rgba(255, 249, 242, 0.9);
+
+  color: var(--navy);
+
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.choice-button:hover:not(:disabled) {
+  border-color: var(--rose);
+  background: var(--pink);
+
+  transform: translateY(-3px);
+}
+
+.choice-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.choice-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.choice-button strong {
+  margin-right: 5px;
+
+  color: var(--rose);
+}
+
+.choice-button small {
+  display: block;
+
+  margin-top: 4px;
+
+  color: var(--blue);
+  font-size: 0.85rem;
+}
+
+.choice-warning {
+  margin: 18px 0 0;
+
+  color: var(--rose);
+
+  font-size: 0.88rem;
+}
+
+.event-paper .choice-button {
+  border-color: rgba(13, 31, 45, 0.3);
+
+  background: rgba(255, 249, 242, 0.86);
+}
+
+.event-paper .choice-button:hover:not(:disabled) {
+  border-color: var(--navy);
+
+  background: rgba(250, 225, 223, 0.9);
+}
+
+/* =====================================
+   回饋頁
+===================================== */
+
+.reply-message {
+  margin: 22px auto;
+  padding: 18px;
+
+  border-left: 4px solid var(--rose);
+
+  background: var(--pink);
+
+  color: var(--navy);
+
+  line-height: 1.8;
+  text-align: left;
+}
+
+.reply-message p {
+  margin: 0 0 12px;
+}
+
+.reply-message p:last-child {
+  margin-bottom: 0;
+}
+
+.reply-message strong {
+  color: var(--rose);
+}
+
+.reply-stats {
+  margin: 25px auto;
+  padding: 18px;
+
+  border: 1px dashed var(--rose);
+
+  background: rgba(237, 215, 201, 0.55);
+
+  color: var(--navy);
+  text-align: left;
+}
+
+.reply-stats p {
+  margin: 8px 0;
+
+  color: #39434a;
+  font-size: 1rem;
+}
+
+.reply-stats strong {
+  color: var(--navy);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.event-paper .reply-stats {
+  border-color: var(--navy);
+
+  background: rgba(255, 249, 242, 0.65);
+}
+
+/* =====================================
+   結算頁
+===================================== */
+
+.final-title {
+  margin: 25px auto;
+  padding: 20px;
+
+  border: 1px dashed var(--rose);
+
+  background: rgba(250, 225, 223, 0.75);
+
+  color: var(--navy);
+  text-align: center;
+}
+
+.final-title span {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: var(--blue);
+  font-size: 0.9rem;
+}
+
+.final-title strong {
+  display: block;
+
+  color: var(--rose);
+  font-size: 1.7rem;
+}
+
+.spending-summary {
+  margin: 24px 0;
+  padding: 18px;
+
+  border: 1px dashed rgba(84, 106, 123, 0.4);
+
+  background: rgba(237, 215, 201, 0.4);
+
+  color: var(--navy);
+  text-align: left;
+}
+
+.spending-summary h3 {
+  margin: 0 0 12px;
+
+  color: var(--navy);
+  font-size: 1.1rem;
+}
+
+.spending-summary ul {
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.spending-summary li {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 8px 0;
+
+  border-bottom: 1px dashed rgba(84, 106, 123, 0.25);
+
+  color: #39434a;
+}
+
+.spending-summary li:last-child {
+  border-bottom: 0;
+}
+
+.spending-summary li strong {
+  color: var(--rose);
+}
+
+/* =====================================
+   動畫
+===================================== */
+
+@keyframes letterAppear {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =====================================
+   手機版
+===================================== */
+
+@media (max-width: 600px) {
+  .envelope-page {
+    padding: 22px 14px;
+  }
+
+  .envelope {
+    width: min(340px, 88vw);
+  }
+
+  .envelope-decoration-left {
+    left: 8%;
+  }
+
+  .envelope-decoration-right {
+    right: 8%;
+  }
+
+  .letter-page {
+    padding: 25px 12px 35px;
+  }
+
+  .letter-paper {
+    min-height: 650px;
+
+    padding: 80px 24px 45px;
+  }
+
+  .letter-paper::before {
+    inset: 10px;
+  }
+
+  .letter-stamp {
+    top: 22px;
+    right: 22px;
+
+    font-size: 0.55rem;
+  }
+
+  .postmark {
+    top: 25px;
+    left: 22px;
+
+    width: 52px;
+    height: 52px;
+
+    font-size: 0.5rem;
+  }
+
+  .letter-paper h1 {
+    font-size: 2rem;
+  }
+
+  .letter-text {
+    font-size: 0.95rem;
+    line-height: 1.9;
+  }
+
+  .letter-button {
+    width: 100%;
+  }
+
+  .choice-button {
+    font-size: 0.9rem;
+  }
+
+  .game-status {
+    grid-template-columns: 1fr;
+  }
+
+  .status-money {
+    grid-column: auto;
+  }
+
+  .status-money strong {
+    font-size: 1.05rem;
+  }
+
+  .status-item strong {
+    font-size: 1rem;
+  }
+
+  .reply-stats {
+    font-size: 0.95rem;
+  }
+
+  .reply-stats strong {
+    font-size: 1rem;
+  }
+
+  .final-title strong {
+    font-size: 1.4rem;
+  }
+}
+
+/* =====================================
+   減少動畫
+===================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

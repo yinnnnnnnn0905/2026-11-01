@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>月底不吃土｜大學生月光族生存戰</title>
+
+  <!-- 載入霞鶩文楷 TC 字體 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- 載入樣式 -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- 載入 p5.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
+</head>
+
+<body>
+  <noscript>
+    請啟用 JavaScript，才能遊玩這款遊戲。
+  </noscript>
+
+  <!-- p5.js 背景動畫容器 -->
+  <div id="p5-background" aria-hidden="true"></div>
+
+  <!-- 遊戲畫面容器 -->
+  <main id="app" class="app-shell">
+    <section
+      id="screen"
+      class="screen"
+      aria-live="polite">
+    </section>
+  </main>
+
+  <!-- 載入遊戲邏輯 -->
+  <script src="game.js"></script>
+
+  <!-- 載入 p5.js 背景動畫 -->
+  <script src="sketch.js"></script>
+</body>
+</html>
